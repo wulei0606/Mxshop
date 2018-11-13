@@ -25,12 +25,10 @@ class GoodsImageSerializer(serializers.ModelSerializer):
         model = GoodsImage
         fields = ("image", )
 
-class GoodsSerializer(serializers.Serializer):
+class GoodsSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
     images = GoodsImageSerializer(many=True)
     class Meta:
         model = Goods
         fields = "__all__"
 
-    def create(self, validated_data):
-        return Goods.objects.create(**validated_data)

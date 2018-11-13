@@ -23,11 +23,15 @@ from django.views.static import serve
 from rest_framework.documentation import include_docs_urls
 from rest_framework.authtoken import views
 from rest_framework.routers import DefaultRouter
-from goods.views import GoodsListViewSet
+from goods.views import GoodsListViewSet,CategoryViewset
 
 router = DefaultRouter()
 #配置goods的url
-router.register('goods',GoodsListViewSet)
+router.register('goods',GoodsListViewSet, base_name="goods")
+#配置category的url
+router.register('categorys',CategoryViewset, base_name="categorys")
+
+
 # goods_list = GoodsListViewSet.as_view({
 #     'get':'list',
 # })
