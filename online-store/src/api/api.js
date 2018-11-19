@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 let host = 'http://shop.projectsedu.com';
-let local_host = 'http://127.0.0.1:8000';
+let local_host = 'http://127.0.0.1:8001';
 //获取商品类别信息
 export const queryCategorygoods = params => { return axios.get(`${host}/indexgoods/`) }
 
@@ -27,10 +27,10 @@ export const getCategory = params => {
 export const getHotSearch = params => { return axios.get(`${host}/hotsearchs/`) }
 
 //获取商品列表
-export const getGoods = params => { return axios.get(`${host}/goods/`, { params: params }) }
+export const getGoods = params => { return axios.get(`${local_host}/goods/`, { params: params }) }
 
 //商品详情
-export const getGoodsDetail = goodId => { return axios.get(`${host}/goods/${goodId}`+'/') }
+export const getGoodsDetail = goodId => { return axios.get(`${local_host}/goods/${goodId}`+'/') }
 
 //获取购物车商品
 export const getShopCarts = params => { return axios.get(`${host}/shopcarts/`) }
@@ -54,7 +54,7 @@ export const getFav = goodsId => { return axios.get(`${host}/userfavs/`+goodsId+
 
 //登录
 export const login = params => {
-  return axios.post(`${host}/login/`, params)
+  return axios.post(`${local_host}/login/`, params)
 }
 
 //注册

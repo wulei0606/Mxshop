@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.authentication import TokenAuthentication
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Goods, GoodsCategory, GoodsImage, GoodsCategoryBrand
@@ -54,6 +55,7 @@ class GoodsListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Goods.objects.get_queryset().order_by('id')
     serializer_class = GoodsSerializer
     pagination_class = GoodsPagination
+    # authentication_classes = (TokenAuthentication,)
     # 过滤
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
     filter_class = GoodsFilter
@@ -61,19 +63,21 @@ class GoodsListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     search_fields = ("name", 'goods_brief', 'goods_desc')
     # 排序
     ordering_fields = ('sold_num', 'add_time')
-    # 自定义过滤字段
+    # #自定义过滤字段
     # def get_queryset(self):
-    #     queryset = Goods.objects.all()
+    #     #queryset = Goods.objects.all()
     #     price_min = self.request.query_params.get("price_min",0)
     #     if price_min:
-    #         queryset = queryset.filter(shop_price__gt=int(price_min))
-    #     return queryset
+    #         self.queryset = Goods.objects.filter(shop_price__gt=int(price_min)).order_by('-add_time')
+    #     return self.queryset
 
 
 class CategoryViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
     list:
         商品分类列表数据
+    retrieve:
+        获取商品分类详情
     """
     queryset = GoodsCategory.objects.filter(category_type=1)
     # queryset = GoodsCategory.objects.all()

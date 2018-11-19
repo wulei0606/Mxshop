@@ -28,6 +28,12 @@ SECRET_KEY = '36^agx@-v*p)^+qtnj-gfa5y1sa&5-fx5iehi&mzcc)me*gfj*'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+# 设置邮箱和用户名和手机号均可登录
+AUTHENTICATION_BACKENDS = (
+    'users.views.CustomBackend',
+
+)
 #替换系统用户
 AUTH_USER_MODEL = 'users.UserProfile'
 
@@ -50,6 +56,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'corsheaders',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -150,8 +157,21 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE':10,
     'DEFAULT_FILTER_BACKENDS':'django_filters.rest_framework.DjangoFilterBackend',
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.authentication.BasicAuthentication',
-    #     'rest_framework.authentication.SessionAuthentication',
-    # ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    ),
 }
+import datetime
+# 与drf的jwt相关的设置
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
+}
+
+#手机号码正则表达式
+REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
+
+#云片网设置
+APIKEY = "7a597b96d54d8c59d81d022029dee75b"
