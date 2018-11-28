@@ -28,6 +28,16 @@ SECRET_KEY = '36^agx@-v*p)^+qtnj-gfa5y1sa&5-fx5iehi&mzcc)me*gfj*'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+# 设置邮箱和用户名和手机号均可登录
+AUTHENTICATION_BACKENDS = (
+    'users.views.CustomBackend',
+    'social_core.backends.weibo.WeiboOAuth2',
+    'social_core.backends.qq.QQOAuth2',
+    'social_core.backends.weixin.WeixinOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+
+)
 #替换系统用户
 AUTH_USER_MODEL = 'users.UserProfile'
 
@@ -48,19 +58,23 @@ INSTALLED_APPS = [
     'trade.apps.TradeConfig',
     'user_operation.apps.UserOperationConfig',
     'rest_framework',
-
+    'django_filters',
+    'corsheaders',
+    'rest_framework.authtoken',
+    'social_django'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'Mxshop.urls'
 
 TEMPLATES = [
@@ -75,6 +89,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -136,6 +152,7 @@ USE_TZ = False   #默认是Ture，时间是utc时间，由于我们要用本地�
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = "/media/"
 STATICFILES_DIRS = (
@@ -151,4 +168,34 @@ REST_FRAMEWORK = {
     #     'rest_framework.authentication.BasicAuthentication',
     #     'rest_framework.authentication.SessionAuthentication',
     # ),
+    'DEFAULT_FILTER_BACKENDS':'django_filters.rest_framework.DjangoFilterBackend',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    ),
 }
+import datetime
+# 与drf的jwt相关的设置
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
+}
+
+#手机号码正则表达式
+REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
+
+#云片网设置
+APIKEY = "7a597b96d54d8c59d81d022029dee75b"
+
+# 第三方登录相关
+SOCIAL_AUTH_WEIBO_KEY = '1191798388'
+SOCIAL_AUTH_WEIBO_SECRET = '790ce03f2e0139874925a6fb2379f8fb'
+
+# SOCIAL_AUTH_QQ_KEY = 'foobar'
+# SOCIAL_AUTH_QQ_SECRET = 'bazqux'
+#
+# SOCIAL_AUTH_WEIXIN_KEY = 'foobar'
+# SOCIAL_AUTH_WEIXIN_SECRET = 'bazqux'
+
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/index/'
